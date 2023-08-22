@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:kek_app/components/button_primary.dart';
 import 'package:kek_app/components/input_special.dart';
 import 'package:kek_app/components/special_appbar.dart';
@@ -24,7 +24,7 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtName = TextEditingController();
   final TextEditingController _txtAlamat = TextEditingController();
-  final TextEditingController _txtTinggiBadan = TextEditingController();
+  // final TextEditingController _txtTinggiBadan = TextEditingController();
   bool isLoading = false;
   String _dateTime = "";
 
@@ -55,7 +55,6 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
       ApiResponse response = await createPatient(
         _txtName.text.toLowerCase(),
         _txtAlamat.text.toLowerCase(),
-        int.parse(_txtTinggiBadan.text),
         dateTime,
       );
 
@@ -94,7 +93,6 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
       patientId,
       _txtName.text,
       _txtAlamat.text,
-      int.parse(_txtTinggiBadan.text),
       dateTime,
     );
     if (response.error == null) {
@@ -119,9 +117,8 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
   void initState() {
     super.initState();
     if (widget.patient != null) {
-      _txtName.text = widget.patient!.name ?? '';
-      _txtAlamat.text = widget.patient!.alamat ?? '';
-      _txtTinggiBadan.text = widget.patient!.tinggiBadan.toString();
+      _txtName.text = widget.patient!.name;
+      _txtAlamat.text = widget.patient!.alamat;
       _dateTime = widget.patient!.tanggalLahir.toString();
     }
   }
@@ -181,25 +178,25 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
                         return null;
                       },
                     ),
-                    TextFormField(
-                      controller: _txtTinggiBadan,
-                      decoration: SpecialInput('Tinggi Badan'),
-                      keyboardType:
-                          TextInputType.number, // Set keyboard type to number
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ], // Allow only digits
-                      maxLength: 3,
+                    // TextFormField(
+                    //   controller: _txtTinggiBadan,
+                    //   decoration: SpecialInput('Tinggi Badan'),
+                    //   keyboardType:
+                    //       TextInputType.number, // Set keyboard type to number
+                    //   inputFormatters: [
+                    //     FilteringTextInputFormatter.digitsOnly
+                    //   ], // Allow only digits
+                    //   maxLength: 3,
 
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Mohon isi Tinggi Badan';
-                        } else if (value.length == 1 || value.length > 3) {
-                          return 'Mohon masukan tinggi badan yg benar';
-                        }
-                        return null;
-                      },
-                    ),
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Mohon isi Tinggi Badan';
+                    //     } else if (value.length == 1 || value.length > 3) {
+                    //       return 'Mohon masukan tinggi badan yg benar';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
                     GestureDetector(
                       onTap: () {
                         FocusScope.of(context).unfocus();
@@ -233,7 +230,7 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
                                 if (widget.patient == null) {
                                   _createPost();
                                 } else {
-                                  _editPost(widget.patient!.id ?? 0);
+                                  _editPost(widget.patient!.id);
                                 }
                               }
                             },

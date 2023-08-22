@@ -114,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
                     Image.asset('assets/icon_love_pasien.png'),
                     const SizedBox(height: 20),
                     Text(
-                      'Cek',
+                      'Kajian',
                       style: popinsWhiteTextStyle.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

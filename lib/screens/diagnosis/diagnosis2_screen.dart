@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:kek_app/components/button_primary.dart';
 import 'package:kek_app/components/header.dart';
 import 'package:kek_app/components/input_special.dart';
+import 'package:kek_app/models/diagnosis_provider.dart';
 import 'package:kek_app/models/patient.dart';
 import 'package:kek_app/screens/diagnosis/diagnosis3_screen.dart';
 import 'package:kek_app/screens/implementation/additional_food_screen.dart';
 // import 'package:kek_app/pages/home_screen.dart';
 import 'package:kek_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class Diagnosis2Screen extends StatefulWidget {
   final Patient? patient;
@@ -23,13 +25,18 @@ class _Diagnosis2ScreenState extends State<Diagnosis2Screen> {
       TextEditingController();
   void checkKek() {
     // ANDA KENA KEK
+    var diagnosisProvider =
+        Provider.of<DiagnosisProvider>(context, listen: false);
     double beratSebelumHamil = double.parse(_txtBeratIbuSebelumHamil.text);
     // double weightInKilo = beratSebelumHamil * beratSebelumHamil;
-    double heightPatient = double.parse(widget.patient!.tinggiBadan.toString());
+    double heightPatient =
+        double.parse(diagnosisProvider.tinggiBadan.toString());
     double heightPatientInMeter = heightPatient / 100;
     double heightPatientInMeterQuadrat =
         heightPatientInMeter * heightPatientInMeter;
     double indeksMasaTubuh = beratSebelumHamil / heightPatientInMeterQuadrat;
+    diagnosisProvider.updateBeratBadanSebelumHamil(beratSebelumHamil);
+    diagnosisProvider.updateIndeksMasaTubuh(indeksMasaTubuh);
 
     if (beratSebelumHamil < 42) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -76,6 +83,12 @@ class _Diagnosis2ScreenState extends State<Diagnosis2Screen> {
           header('Berat', 'Badan Ibu', 'Hamil?', () {
             Navigator.pop(context);
           }, 'Sebelum'),
+          // Text('data'),
+          // Consumer<DiagnosisProvider>(
+          //   builder: (context, diagnosis, child) {
+          //     return Text(diagnosis.ukuranLila.toString());
+          //   },
+          // ),
           Form(
             key: formKey,
             child: Padding(

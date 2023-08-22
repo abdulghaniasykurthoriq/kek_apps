@@ -1,8 +1,11 @@
+import 'package:kek_app/models/auth_provider.dart';
 import 'package:kek_app/screens/main_screen.dart';
 import 'package:kek_app/screens/profile_screen.dart';
 import 'package:kek_app/screens/whatever.dart';
 import 'package:flutter/material.dart';
+import 'package:kek_app/services/user_services.dart';
 import 'package:kek_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,6 +17,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 1;
   bool _isHome = true;
+  String? gender;
 
   Widget customAppBar() {
     switch (_selectedIndex) {
@@ -76,9 +80,15 @@ class _HomeState extends State<Home> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15)),
                           child: ClipOval(
-                            child: Image.asset(
-                              'assets/doctor_cewe.jpg',
-                              fit: BoxFit.cover,
+                            child: Consumer<AuthProvider>(
+                              builder: (context, authProvider, _) {
+                                String imageUrl = authProvider.urlPhotoUser;
+                                // print(imageUrl);
+                                return Image.asset(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -106,14 +116,22 @@ class _HomeState extends State<Home> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                          color: const Color(0xffF9FAFF),
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Icon(Icons.menu, color: blueColor),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 0;
+                          _isHome = false;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            color: const Color(0xffF9FAFF),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Icon(Icons.menu, color: blueColor),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -130,7 +148,9 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.circular(15)),
                         child: ClipOval(
                           child: Image.asset(
-                            'assets/doctor_cewe.jpg',
+                            gender == 'p'
+                                ? 'assets/doctor_cewe.jpg'
+                                : 'assets/doctor_cowo.jpg',
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -146,6 +166,18 @@ class _HomeState extends State<Home> {
       default:
         return const SizedBox();
     }
+  }
+
+  @override
+  void initState() {
+    setGender();
+    super.initState();
+  }
+
+  Future<void> setGender() async {
+    gender = await getGenre();
+    setState(() {});
+    // print('gender => $gender');
   }
 
   @override

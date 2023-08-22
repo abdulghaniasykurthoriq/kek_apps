@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:kek_app/components/button_primary.dart';
 import 'package:kek_app/components/header.dart';
 import 'package:kek_app/components/input_special.dart';
+import 'package:kek_app/models/diagnosis_provider.dart';
 // import 'package:kek_app/components/special_appbar.dart';
 import 'package:kek_app/models/patient.dart';
 import 'package:flutter/services.dart';
 import 'package:kek_app/screens/diagnosis/diagnosis4_screen.dart';
 import 'package:kek_app/screens/implementation/additional_food_screen.dart';
 import 'package:kek_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class Diagnosis3Screen extends StatefulWidget {
   final Patient? patient;
@@ -21,9 +23,16 @@ class _Diagnosis3ScreenState extends State<Diagnosis3Screen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _txtBeratIbuPadaTrimester =
       TextEditingController();
+
   void checkKek() {
+    var diagnosisProvider =
+        Provider.of<DiagnosisProvider>(context, listen: false);
+    // print('halaman diagnosis 4');
+    // print(diagnosisProvider.beratBadanSebelumHamil);
     // ANDA KENA KEK
     double beratPadaTrimester = double.parse(_txtBeratIbuPadaTrimester.text);
+
+    diagnosisProvider.updateBeratBadanTrimesterHamil(beratPadaTrimester);
     if (beratPadaTrimester < 45) {
       // print('kekk');
       Navigator.of(context).push(MaterialPageRoute(

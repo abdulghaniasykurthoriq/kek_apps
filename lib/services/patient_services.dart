@@ -41,7 +41,7 @@ Future<ApiResponse> getPatients(String q, int page) async {
 }
 
 Future<ApiResponse> createPatient(
-    String name, String alamat, int tinggiBadan, DateTime tanggalLahir) async {
+    String name, String alamat, DateTime tanggalLahir) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -53,7 +53,6 @@ Future<ApiResponse> createPatient(
       'name': name,
       'alamat': alamat,
       'tanggal_lahir': tanggalLahir.toString(),
-      'tinggi_badan': tinggiBadan.toString(),
     });
 
     switch (response.statusCode) {
@@ -77,8 +76,8 @@ Future<ApiResponse> createPatient(
   return apiResponse;
 }
 
-Future<ApiResponse> editPatient(int patientId, String name, String alamat,
-    int tinggiBadan, DateTime tanggalLahir) async {
+Future<ApiResponse> editPatient(
+    int patientId, String name, String alamat, DateTime tanggalLahir) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -90,7 +89,6 @@ Future<ApiResponse> editPatient(int patientId, String name, String alamat,
       'name': name,
       'alamat': alamat,
       'tanggal_lahir': tanggalLahir.toString(),
-      'tinggi_badan': tinggiBadan.toString(),
     });
     switch (response.statusCode) {
       case 200:

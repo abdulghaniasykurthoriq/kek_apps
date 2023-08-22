@@ -91,6 +91,123 @@ class _DetailRiwayatState extends State<DetailRiwayat> {
                 ]),
                 pw.SizedBox(height: 30),
                 pw.Text(
+                  'Status Kehamilan',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(width: 50, child: pw.Text('gravida')),
+                      pw.Text(
+                          ':  ${widget.riwayat!.diagnosis.gravida.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(width: 50, child: pw.Text('para')),
+                      pw.Text(
+                          ':   ${widget.riwayat!.diagnosis.para.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(width: 50, child: pw.Text('abortus')),
+                      pw.Text(
+                          ':   ${widget.riwayat!.diagnosis.abortus.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.SizedBox(height: 30),
+                pw.Text(
+                  'Diagnosis',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(width: 100, child: pw.Text('tinggi badan')),
+                      pw.Text(
+                          ':   ${widget.riwayat!.diagnosis.tinggiBadan.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(width: 100, child: pw.Text('ukuran lila')),
+                      pw.Text(
+                          ':   ${widget.riwayat!.diagnosis.ukuranLila.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(
+                          width: 100, child: pw.Text('berat sebelum hamil')),
+                      pw.Text(
+                          ':   ${widget.riwayat!.diagnosis.beratSebelumHamil.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(
+                          width: 100, child: pw.Text('indeks masa tubuh')),
+                      pw.Text(
+                          ':   ${widget.riwayat!.diagnosis.indeksMasaTubuh.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(
+                          width: 100, child: pw.Text('berat trimester')),
+                      pw.Text(
+                          ':  ${widget.riwayat!.diagnosis.beratBadanTrimesterHamil.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(
+                          width: 100, child: pw.Text('kadar hemoglobin')),
+                      pw.Text(
+                          ':  ${widget.riwayat!.diagnosis.kadarHemoglobin.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.Row(
+                  children: [
+                    pw.SizedBox(width: 50),
+                    pw.Row(children: [
+                      pw.Container(
+                          width: 100, child: pw.Text('hasil diagnosa')),
+                      pw.Text(
+                          ':  ${widget.riwayat!.diagnosis.resultDiagnosis.toString()} ')
+                    ]),
+                  ],
+                ),
+                pw.SizedBox(height: 30),
+                pw.Text(
                   'Makanan Tambahan',
                   style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                 ),
@@ -106,28 +223,12 @@ class _DetailRiwayatState extends State<DetailRiwayat> {
                   ],
                 ),
                 pw.SizedBox(height: 30),
-                pw.Text(
-                  'Saran Makanan Sehat',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                ),
-                pw.SizedBox(height: 10),
-                pw.Row(
-                  children: [
-                    pw.SizedBox(width: 50),
-                    pw.Text('-'),
-                    ...widget.riwayat!.healthyFood
-                        .map((e) => pw.Text(' ${e.food.toString()}'))
-                        .toList(),
-                    // pw.Text('-  Sering makan yang enak tambhn')
-                  ],
-                ),
-                pw.SizedBox(height: 30),
-                pw.Text(
-                  'Evaluasi',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                ),
-                pw.SizedBox(height: 10),
-                pw.Row(children: [pw.SizedBox(width: 50), pw.Text('-')]),
+                // pw.Text(
+                //   'Evaluasi',
+                //   style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                // ),
+                // pw.SizedBox(height: 10),
+                // pw.Row(children: [pw.SizedBox(width: 50), pw.Text('-')]),
               ]); // Center
         })); // Page
 
@@ -219,26 +320,81 @@ class _DetailRiwayatState extends State<DetailRiwayat> {
               const SizedBox(
                 height: 20,
               ),
-              Text(
-                'Makanan Sehat',
-                style: popinsBlackTextStyle.copyWith(fontWeight: bold),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, bottom: 40),
-                child: Column(
-                  children: widget.riwayat!.healthyFood
-                      .map((healthyFood) => Text(healthyFood.food.toString()))
-                      .toList(),
-                ),
-              ),
+              // Text(
+              //   'Makanan Sehat',
+              //   style: popinsBlackTextStyle.copyWith(fontWeight: bold),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 30, bottom: 40),
+              //   child: Column(
+              //     children: widget.riwayat!.healthyFood
+              //         .map((healthyFood) => Text(healthyFood.food.toString()))
+              //         .toList(),
+              //   ),
+              // ),
             ],
           ),
         );
       default:
         // ignore: avoid_unnecessary_containers
         return Container(
-          child: const Column(
-            children: [Text("-")],
+          child: Column(
+            children: [
+              const Text(
+                'STATUS KEHAMILAN',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('gravida')),
+                Text(':  ${widget.riwayat!.diagnosis.gravida.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('para')),
+                Text(':  ${widget.riwayat!.diagnosis.para.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('abortus')),
+                Text(':  ${widget.riwayat!.diagnosis.abortus.toString()}')
+              ]),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Diagnosis',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('tinggi badan')),
+                Text(':  ${widget.riwayat!.diagnosis.tinggiBadan.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('ukuran lila')),
+                Text(':  ${widget.riwayat!.diagnosis.ukuranLila.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('berat sebelum hamil')),
+                Text(
+                    ':  ${widget.riwayat!.diagnosis.beratSebelumHamil.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('indeks masa tubuh')),
+                Text(
+                    ':  ${widget.riwayat!.diagnosis.indeksMasaTubuh.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(
+                    width: 100, child: Text('berat badan trimester')),
+                Text(
+                    ':  ${widget.riwayat!.diagnosis.beratBadanTrimesterHamil.toString()}')
+              ]),
+              Row(children: [
+                const SizedBox(width: 100, child: Text('kadar hemoglobin')),
+                Text(
+                    ':  ${widget.riwayat!.diagnosis.kadarHemoglobin.toString()}')
+              ]),
+            ],
           ),
         );
     }
@@ -312,11 +468,18 @@ class _DetailRiwayatState extends State<DetailRiwayat> {
                                     fontWeight: bold),
                               ),
                               Text(
+                                  '${countAge(widget.riwayat!.patient.tanggalLahir.toString())} tahun'),
+                              Text(
                                 toPascalCase(
                                     widget.riwayat!.patient.alamat.toString()),
                                 style:
                                     popinsGreykTextStyle.copyWith(fontSize: 12),
                               ),
+                              Text(
+                                  formatDate(
+                                      widget.riwayat!.createdAt.toString()),
+                                  style: popinsGreykTextStyle.copyWith(
+                                      fontSize: 12)),
                             ],
                           ),
                           // Image.asset('assets/femenine.png'),
@@ -352,6 +515,13 @@ class _DetailRiwayatState extends State<DetailRiwayat> {
                       //   ),
                       // ),
                       valueMakananOrEvaluasi(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                            'dicek ${widget.riwayat!.createdBy.name.toString()}'),
+                      ),
                       Center(
                         child: BtnPrimary('EXPORT PDF', () {
                           // downloadRiwayatPatientPdf();

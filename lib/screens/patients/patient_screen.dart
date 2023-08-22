@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:kek_app/constant.dart';
 import 'package:kek_app/models/api_response.dart';
+import 'package:kek_app/models/auth_provider.dart';
 import 'package:kek_app/models/patient.dart';
-import 'package:kek_app/screens/diagnosis/diagnosis1_screen.dart';
+import 'package:kek_app/screens/diagnosis/diagnosis0_screen.dart';
+// import 'package:kek_app/screens/diagnosis/diagnosis1_screen.dart';
 import 'package:kek_app/screens/patients/new_patient_screen.dart';
 import 'package:kek_app/services/patient_services.dart';
 import 'package:kek_app/services/user_services.dart';
 import 'package:kek_app/theme.dart';
+import 'package:kek_app/utils/count_age.dart';
+import 'package:kek_app/utils/pascal_case.dart';
 import 'package:kek_app/utils/truncate_string.dart';
+import 'package:provider/provider.dart';
 
 class PatientScreen extends StatefulWidget {
   const PatientScreen({Key? key}) : super(key: key);
@@ -24,18 +29,20 @@ class _PatientScreenState extends State<PatientScreen> {
   final scrollController = ScrollController();
   bool _loadMore = false;
   int page = 1;
-  late int lastPage;
+  int lastPage = 1; // Set default value to 1
+  String? kelamin;
 
   List<dynamic> _patientList = [];
 
   Future<void> retrievePatients() async {
     userId = await getUserId();
+    kelamin = await getGenre();
     ApiResponse response = await getPatients(txtFilter.text.toString(), page);
 
     if (response.error == null) {
       if (mounted) {
         setState(() {
-          lastPage = response.lastPage!;
+          lastPage = response.lastPage ?? lastPage; // Update lastPage value
           _patientList = [..._patientList, ...response.data as List<dynamic>];
           _loading = false;
         });
@@ -55,6 +62,9 @@ class _PatientScreenState extends State<PatientScreen> {
   void _handleDeletePatient(int patientId) async {
     ApiResponse response = await deletePatient(patientId);
     if (response.error == null) {
+      setState(() {
+        _patientList = [];
+      });
       retrievePatients();
     } else if (response.error == unauthorized) {
       logout().then((value) => {
@@ -69,21 +79,30 @@ class _PatientScreenState extends State<PatientScreen> {
   }
 
   void handleFilter() {
+    setState(() {
+      _patientList = []; // Clear patient list
+      page = 1; // Reset page to 1
+      lastPage = 1; // Reset lastPage to 1
+    });
     retrievePatients();
     FocusScope.of(context).unfocus();
   }
 
   @override
   void initState() {
+    super.initState();
     retrievePatients();
     scrollController.addListener(_scrollListener);
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (!mounted) return const SizedBox();
-
     PreferredSize appBar() {
       return PreferredSize(
         preferredSize: const Size.fromHeight(140),
@@ -114,7 +133,6 @@ class _PatientScreenState extends State<PatientScreen> {
                               height: 40,
                               width: 40,
                               decoration: BoxDecoration(
-                                  // color: const Color(0xffF9FAFF),
                                   borderRadius: BorderRadius.circular(15)),
                               child: Icon(Icons.arrow_back, color: blueColor),
                             ),
@@ -157,9 +175,15 @@ class _PatientScreenState extends State<PatientScreen> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15)),
                         child: ClipOval(
-                          child: Image.asset(
-                            'assets/avatar.jpg',
-                            fit: BoxFit.cover,
+                          child: Consumer<AuthProvider>(
+                            builder: (context, authProvider, _) {
+                              String imageUrl = authProvider.urlPhotoUser;
+                              // print(imageUrl);
+                              return Image.asset(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -190,8 +214,6 @@ class _PatientScreenState extends State<PatientScreen> {
                           child: TextFormField(
                             controller: txtFilter,
                             decoration: const InputDecoration(
-                              // labelText: 'Name',
-
                               hintText: 'Search . . .',
                               border: InputBorder.none,
                             ),
@@ -228,12 +250,10 @@ class _PatientScreenState extends State<PatientScreen> {
       );
     }
 
-    Widget cardPasien(
-        Patient patient, String nama, String alamat, String tanggalLahir) {
-      // print(tanggalLahir);
-      int lahir = int.parse(tanggalLahir.split('-').first);
-      int umur = DateTime.now().year - lahir;
-
+    Widget cardPasien(Patient patient) {
+      // int lahir = int.parse(patient.tanggalLahir!.split('-').first);
+      // int umur = DateTime.now().year - lahir;
+      String age = countAge(patient.tanggalLahir.toString());
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
@@ -245,8 +265,6 @@ class _PatientScreenState extends State<PatientScreen> {
                   color: redColor3, borderRadius: BorderRadius.circular(25)),
               child: Image.asset(
                 'assets/cewe_riwayat.png',
-
-                // fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 10),
@@ -254,8 +272,7 @@ class _PatientScreenState extends State<PatientScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  // nama.length > 12 ? '${nama.substring(0, 20)}...' : nama,
-                  truncateString(nama, 20),
+                  toPascalCase(truncateString(patient.name, 20)),
                   style: comfortaaBlueTextStyle.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -264,9 +281,7 @@ class _PatientScreenState extends State<PatientScreen> {
                   height: 4,
                 ),
                 Text(
-                  // 'Desa  $alamat',
-                  // alamat.length > 12 ? '${alamat.substring(0, 15)}...' : alamat,
-                  truncateString(alamat, 20),
+                  truncateString(patient.alamat, 20),
                   style: comfortaaBlueTextStyle.copyWith(fontSize: 12),
                 )
               ],
@@ -274,43 +289,38 @@ class _PatientScreenState extends State<PatientScreen> {
             const Expanded(child: SizedBox()),
             Column(
               children: [
-                patient.createBy == userId
-                    ? PopupMenuButton(
-                        child: const Padding(
-                            padding: EdgeInsets.only(bottom: 10),
-                            child: Icon(
-                              Icons.more_horiz,
-                              color: Colors.black,
-                            )),
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                              value: 'edit', child: Text('Edit')),
-                          const PopupMenuItem(
-                              value: 'delete', child: Text('Delete')),
-                        ],
-                        onSelected: (val) => {
-                          if (val == 'edit')
-                            {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => CreatePatientScreen(
-                                        title: 'Edit',
-                                        patient: patient,
-                                      )))
-                            }
-                          else
-                            {_handleDeletePatient(patient.id ?? 0)}
-                        },
-                      )
-                    : const SizedBox(),
-                // const Icon(
-                //   Icons.more_horiz,
-                //   color: Colors.black,
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
+                if (patient.createdBy == userId)
+                  PopupMenuButton(
+                    child: const Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.more_horiz,
+                        color: Colors.black,
+                      ),
+                    ),
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                      const PopupMenuItem(
+                          value: 'delete', child: Text('Delete')),
+                    ],
+                    onSelected: (val) {
+                      if (val == 'edit') {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CreatePatientScreen(
+                                  title: 'Edit',
+                                  patient: patient,
+                                )));
+                      } else {
+                        _handleDeletePatient(patient.id);
+                      }
+                    },
+                  )
+                else
+                  const SizedBox(),
                 Text(
-                  '${umur.toString()} tahun',
+                  // '0 tahun',
+
+                  age,
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ],
@@ -339,35 +349,32 @@ class _PatientScreenState extends State<PatientScreen> {
                 ),
               ),
               child: ListView.builder(
-                  controller: scrollController,
-                  itemCount:
-                      _loadMore ? _patientList.length + 1 : _patientList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index < _patientList.length) {
-                      Patient patient = _patientList[index];
-                      return GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Diagnosis1Screen(
-                                    patient: patient,
-                                  )));
-                        },
-                        child: Container(
-                            margin:
-                                EdgeInsets.symmetric(horizontal: defaultMargin),
-                            child: cardPasien(
-                                patient,
-                                patient.name.toString(),
-                                patient.alamat.toString(),
-                                patient.tanggalLahir.toString())),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  }),
+                controller: scrollController,
+                itemCount: _patientList.length + (_loadMore ? 1 : 0),
+                itemBuilder: (BuildContext context, int index) {
+                  if (index < _patientList.length) {
+                    Patient patient = _patientList[index];
+                    return GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Diagnosis0(
+                            patient: patient,
+                          ),
+                        ));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                        child: cardPasien(patient),
+                      ),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
             ),
     );
   }
@@ -380,9 +387,6 @@ class _PatientScreenState extends State<PatientScreen> {
           _loadMore = true;
         });
         page = page + 1;
-        // print('scroll listener called');
-        // print('lastpage is $lastPage');
-        // print(page);
         await retrievePatients();
         setState(() {
           _loadMore = false;

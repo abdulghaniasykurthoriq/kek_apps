@@ -48,12 +48,14 @@ Future<ApiResponse> retrieveRiwayatMyPatients() async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-
+    // print(jsonDecode(response.body)['data']);
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['data']
-            .map<RiwayatPatient>((p) => RiwayatPatient.fromJson(p))
+            .map((p) => RiwayatPatient.fromJson(p))
             .toList();
+        apiResponse.data as List<dynamic>;
+
         break;
 
       case 401:
@@ -71,9 +73,22 @@ Future<ApiResponse> retrieveRiwayatMyPatients() async {
   return apiResponse;
 }
 
-Future<ApiResponse> createRiwayatPasient(String status, int patientId,
-    String resultDiagnosis, String additionalFood, String healthyFood) async {
+Future<ApiResponse> createRiwayatPasient(
+    String status,
+    int patientId,
+    int gravida,
+    int para,
+    int abortus,
+    double tiggiBadan,
+    double ukuranLila,
+    double beratSebelumHamil,
+    double indeksMasaTubuh,
+    double beratBadanTrimesterHamil,
+    double kadarHemoglobin,
+    String resultDiagnosis,
+    String additionalFood) async {
   ApiResponse apiResponse = ApiResponse();
+
   try {
     String token = await getToken();
     final response = await http.post(Uri.parse(riwayatURL), headers: {
@@ -83,9 +98,19 @@ Future<ApiResponse> createRiwayatPasient(String status, int patientId,
       'status': status,
       'patient_id': patientId.toString(), // Konversi patientId ke String
       'result_diagnosis': resultDiagnosis,
+      'gravida': gravida.toString(),
+      'para': para.toString(),
+      'abortus': abortus.toString(),
+      'tinggi_badan': tiggiBadan.toString(),
+      'ukuran_lila': ukuranLila.toString(),
+      'berat_sebelum_hamil': beratSebelumHamil.toString(),
+      'indeks_masa_tubuh': indeksMasaTubuh.toString(),
+      'berat_badan_trimester_hamil': beratBadanTrimesterHamil.toString(),
+      'kadar_hemoglobin': kadarHemoglobin.toString(),
       'additional_food': additionalFood, // Perbaikan penulisan nama properti
-      'healthy_food': healthyFood
+      // 'healthy_food': healthyFood
     });
+    // print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body);
@@ -102,6 +127,7 @@ Future<ApiResponse> createRiwayatPasient(String status, int patientId,
     }
   } catch (e) {
     apiResponse.error = somethingWentWrong;
+    // print(e);
   }
 
   return apiResponse;

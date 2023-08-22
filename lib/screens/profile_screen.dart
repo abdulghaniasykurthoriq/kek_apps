@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:kek_app/models/auth_provider.dart';
 import 'package:kek_app/screens/login.dart';
-// import 'package:kek_app/models/pages_model.dart';
 import 'package:kek_app/services/user_services.dart';
 import 'package:kek_app/theme.dart';
-// import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -13,6 +13,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? kelamin;
+  String? nama;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    setGender();
+    super.initState();
+  }
+
+  Future<void> setGender() async {
+    kelamin = await getGenre();
+    nama = await getName();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,9 +42,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 65,
             width: 65,
             child: ClipOval(
-              child: Image.asset(
-                'assets/doctor_cewe.jpg',
-                fit: BoxFit.cover,
+              child: Consumer<AuthProvider>(
+                builder: (context, authProvider, _) {
+                  String imageUrl = authProvider.urlPhotoUser;
+                  // print(imageUrl);
+                  return Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
             ),
           ),
@@ -36,60 +58,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 30,
           ),
           Text(
-            'Abdul Ghani Asykur',
-            style:
-                comfortaaBlueTextStyle.copyWith(fontWeight: bold, fontSize: 16),
+            nama ?? " ",
+            style: comfortaaBlueTextStyle.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          GestureDetector(
-            onTap: () async {
-              // await logout();
-
-              logout().then((value) => {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => const Login()),
-                        (route) => false)
-                  });
-
-              // context
-              //     .read<Pages>()
-              //     .reset(); // Reset semua konfigurasi pada model Pages
-
-              // ignore: use_build_context_synchronously
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => const Login()),
-                (Route<dynamic> route) => false,
-              );
-              // Navigator.pushNamedAndRemoveUntil(
-              //   context,
-              //   '/sign-in', // Nama rute untuk halaman masuk (SignIn)
-              //   (route) =>
-              //       false, // Menghapus semua halaman yang ada dari tumpukan navigasi
-              // );
-            },
-            // onTap: () {
-            //   logout().then((value) {
-            //     context.read<Pages>().updateCurrentPage(1);
-            //     context.read<Pages>().setIsHome(true);
-            //     Navigator.of(context).push(
-            //       MaterialPageRoute(builder: (context) => const SignIn()),
-            //     );
-            //     //s Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => SignIn() ), (Route<dynamic> route) => false);
-            //   });
-            // },
-            child: const Text('Logout'),
-          ),
-          // Consumer<Pages>(
-          //   builder: (_, pages, __) {
+          // Consumer<AuthProvider>(
+          //   builder: (context, authProvider, _) {
           //     return Text(
-          //       '${context.watch<Pages>().currentPage}',
+          //       authProvider.urlPhotoUser,
+          //       // key: const Key('counterState'),
           //     );
           //   },
           // ),
+          const SizedBox(
+            height: 30,
+          ),
+
+          GestureDetector(
+            onTap: () async {
+              setState(() {
+                isLoading = true;
+              });
+
+              bool isLoggedOut = await logout();
+              if (isLoggedOut) {
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const Login()),
+                  (route) => false,
+                );
+              }
+
+              setState(() {
+                isLoading = false;
+              });
+            },
+            child: isLoading ? const Text('Loading...') : const Text('Logout'),
+          ),
         ],
       ),
     );

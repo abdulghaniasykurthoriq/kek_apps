@@ -3,7 +3,7 @@ import 'package:kek_app/components/button_secondary.dart';
 import 'package:kek_app/components/special_appbar.dart';
 import 'package:kek_app/models/patient.dart';
 import 'package:kek_app/screens/implementation/additional_food_screen.dart';
-import 'package:kek_app/screens/implementation/healthy_food_screen.dart';
+// import 'package:kek_app/screens/implementation/healthy_food_screen.dart';
 // import 'package:kek_app/pages/home_screen.dart';
 import 'package:kek_app/theme.dart';
 
@@ -28,8 +28,10 @@ class _Diagnosis5ScreenState extends State<Diagnosis5Screen> {
   void patientIsNormal() {
     // ANDA TIDAK KENA KEK
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HealthyFoodScreen(
-            patient: widget.patient, status: 'normal', resultDiagnosis: '')));
+        builder: (context) => AdditioanFoodScreen(
+            status: 'normal',
+            patient: widget.patient!,
+            resultDiagnosis: 'normal')));
   }
 
   @override

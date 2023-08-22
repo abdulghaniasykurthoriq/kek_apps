@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kek_app/components/button_primary.dart';
 import 'package:kek_app/components/input_special.dart';
-import 'package:kek_app/components/special_appbar.dart';
+import 'package:kek_app/components/header.dart';
+import 'package:kek_app/models/diagnosis_provider.dart';
+
 import 'package:kek_app/models/patient.dart';
 import 'package:kek_app/screens/diagnosis/diagnosis5_screen.dart';
 import 'package:kek_app/screens/implementation/additional_food_screen.dart';
 import 'package:flutter/services.dart';
 
 import 'package:kek_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class Diagnosis4Screen extends StatefulWidget {
   final Patient? patient;
@@ -22,7 +25,10 @@ class _Diagnosis4ScreenState extends State<Diagnosis4Screen> {
   final TextEditingController _txtKadarHemoglobin = TextEditingController();
   void checkKek() {
     // ANDA KENA KEK
+    var diagnosisProvider =
+        Provider.of<DiagnosisProvider>(context, listen: false);
     double kadarHemoglobin = double.parse(_txtKadarHemoglobin.text);
+    diagnosisProvider.updateKadarHemoglobin(kadarHemoglobin);
     if (kadarHemoglobin < 11) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AdditioanFoodScreen(
@@ -49,42 +55,39 @@ class _Diagnosis4ScreenState extends State<Diagnosis4Screen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: specialAppbar('Kadar', 'Hemoglobin', 'Ibu?', () {
-          Navigator.pop(context);
-        }, ''),
-        body: Column(
-          children: [
-            Expanded(
-              child: Form(
-                key: formKey,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                          controller: _txtKadarHemoglobin,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}')),
-                          ],
-                          maxLength: 5,
-                          validator: (val) {
-                            if (val == "" || val == null) {
-                              return "tidak boleh kosong";
-                            }
-                            return null;
-                          },
-                          decoration: SpecialInput('Kadar HB ibu dalam gram')),
-                      // const SizedBox(height: 200),
-                    ],
-                  ),
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: ListView(children: [
+            header('Kadar', 'Hemoglobin', 'Ibu?', () {
+              Navigator.pop(context);
+            }, ''),
+            Form(
+              key: formKey,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+                child: Column(
+                  children: [
+                    TextFormField(
+                        controller: _txtKadarHemoglobin,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}')),
+                        ],
+                        maxLength: 5,
+                        validator: (val) {
+                          if (val == "" || val == null) {
+                            return "tidak boleh kosong";
+                          }
+                          return null;
+                        },
+                        decoration: SpecialInput('Kadar Hemogloibn')),
+                    // const SizedBox(height: 200),
+                  ],
                 ),
               ),
             ),
@@ -94,12 +97,57 @@ class _Diagnosis4ScreenState extends State<Diagnosis4Screen> {
                 if (formKey.currentState!.validate()) {
                   checkKek();
                 }
-                // Navigator.pushNamed(context, '/diagnosis5');
+                // Navigator.pushNamed(context, '/diagnosis3');
               },
             ),
-          ],
-        ),
-      ),
-    );
+          ]),
+          //   appBar: specialAppbar('Berat', 'badan ibu pada ', 'trimester III', () {
+          //     Navigator.pop(context);
+          //   }, 'kehamilan'),
+          //   body: Column(
+          //     children: [
+          //       Expanded(
+          //         child: Form(
+          //           key: formKey,
+          //           child: Padding(
+          //             padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+          //             child: Column(
+          //               children: [
+          //                 TextFormField(
+          //                     controller: _txtBeratIbuPadaTrimester,
+          //                     keyboardType: const TextInputType.numberWithOptions(
+          //                         decimal: true),
+          //                     inputFormatters: [
+          //                       FilteringTextInputFormatter.allow(
+          //                           RegExp(r'^\d+\.?\d{0,2}')),
+          //                     ],
+          //                     maxLength: 5,
+          //                     validator: (val) {
+          //                       if (val == "" || val == null) {
+          //                         return "tidak boleh kosong";
+          //                       }
+          //                       return null;
+          //                     },
+          //                     decoration: SpecialInput('Berat Badan')),
+          //                 // const SizedBox(height: 200),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //       BtnPrimary(
+          //         'Selanjutnya',
+          //         () {
+          //           if (formKey.currentState!.validate()) {
+          //             checkKek();
+          //           }
+          //           // Navigator.pushNamed(context, '/diagnosis4');
+          //         },
+          //       ),
+          //     ],
+          //   ),
+          // )
+          // ,
+        ));
   }
 }

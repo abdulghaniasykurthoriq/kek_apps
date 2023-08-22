@@ -8,13 +8,13 @@ import 'package:kek_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<ApiResponse> login(String email, String password) async {
+Future<ApiResponse> login(String username, String password) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
     final response = await http.post(Uri.parse(loginURL),
         headers: {'Accept': 'application/json'},
-        body: {'email': email, 'password': password});
+        body: {'username': username, 'password': password});
 
     switch (response.statusCode) {
       case 200:
@@ -99,6 +99,16 @@ Future<String> getToken() async {
   return pref.getString('token') ?? '';
 }
 
+Future<String> getGenre() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getString('genre') ?? '';
+}
+
+Future<String> getName() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getString('name') ?? '';
+}
+
 Future<int> getUserId() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return pref.getInt('userId') ?? 0;
@@ -106,7 +116,28 @@ Future<int> getUserId() async {
 
 Future<bool> logout() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
-  return pref.remove('token');
+  String token = await getToken();
+  final Uri logoutUrl = Uri.parse(logoutURL);
+  final Map<String, String> headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
+  try {
+    final response = await http.post(logoutUrl, headers: headers);
+
+    switch (response.statusCode) {
+      case 200:
+        await pref.clear();
+        return true;
+      case 401:
+        return false; // Handle unauthorized case accordingly
+      default:
+        return false; // Handle other status codes accordingly
+    }
+  } catch (e) {
+    return false; // Handle error case accordingly
+  }
 }
 
 // get base64 encoded image

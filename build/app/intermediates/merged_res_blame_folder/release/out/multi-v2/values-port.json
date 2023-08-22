@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.kek_app-mergeReleaseResources-30:/values-port/values-port.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\agat\\.gradle\\caches\\transforms-3\\b8004f629d4df42bf09d1125932c4b65\\transformed\\appcompat-1.2.0\\res\\values-port\\values-port.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "55",
+                        "endOffsets": "106"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kek_app/constant.dart';
 import 'package:kek_app/models/api_response.dart';
+import 'package:kek_app/models/auth_provider.dart';
 import 'package:kek_app/models/riwayat_patient.dart';
 import 'package:kek_app/screens/patients/detail_riwayat_patient.dart';
 import 'package:kek_app/services/riwayat_patient_service.dart';
@@ -9,6 +10,7 @@ import 'package:kek_app/theme.dart';
 import 'package:kek_app/utils/format_date.dart';
 import 'package:kek_app/utils/pascal_case.dart';
 import 'package:kek_app/utils/truncate_string.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatScreen extends StatefulWidget {
   const RiwayatScreen({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
       // print(response.currentPage);
       if (mounted) {
         setState(() {
-          lastPage = response.lastPage!;
+          lastPage = response.lastPage ?? response.lastPage!;
           riwayatList = [...riwayatList, ...response.data as List<dynamic>];
           // _loading = _loading ? !_loading : _loading;
           _loading = false;
@@ -58,6 +60,9 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
   void _deleteRiwayatPatient(int id) async {
     ApiResponse response = await deleteRiwayatPatient(id);
     if (response.error == null) {
+      setState(() {
+        riwayatList = [];
+      });
       retrievePatients();
     } else if (response.error == unauthorized) {
       logout().then((value) => {
@@ -79,7 +84,13 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
   }
 
   void filter() {
+    setState(() {
+      riwayatList = [];
+      page = 1;
+      lastPage = 1;
+    });
     retrievePatients();
+    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -159,9 +170,15 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15)),
                         child: ClipOval(
-                          child: Image.asset(
-                            'assets/avatar.jpg',
-                            fit: BoxFit.cover,
+                          child: Consumer<AuthProvider>(
+                            builder: (context, authProvider, _) {
+                              String imageUrl = authProvider.urlPhotoUser;
+                              // print(imageUrl);
+                              return Image.asset(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -353,6 +370,6 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
           _loadMore = false;
         });
       }
-    } else {}
+    }
   }
 }

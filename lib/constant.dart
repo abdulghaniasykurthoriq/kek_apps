@@ -1,6 +1,6 @@
-const baseURL = 'http://192.168.1.6:8000/api';
-
-// const baseURL = 'http://192.168.43.121:8000/api';
+// const baseURL = 'http://192.168.1.6:8000/api';
+// const baseURL = 'http://192.168.0.115:8000/api';
+const baseURL = 'http://54.255.241.74/api';
 
 const loginURL = '$baseURL/login';
 const registerURL = '$baseURL/register';

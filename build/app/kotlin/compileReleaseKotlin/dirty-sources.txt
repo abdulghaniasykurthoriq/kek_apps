@@ -1,0 +1,1 @@
+C:\Users\agat\Documents\kek_apps\android\app\src\main\kotlin\com\example\kek_app\MainActivity.kt

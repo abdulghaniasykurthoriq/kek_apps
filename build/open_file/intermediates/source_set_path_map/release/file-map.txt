@@ -1,0 +1,14 @@
+com.crazecoder.openfile.open_file-jetified-annotation-experimental-1.1.0-0 C:\Users\agat\.gradle\caches\transforms-3\4aa88baa28bebb2c5026ed42a8d72d9e\transformed\jetified-annotation-experimental-1.1.0\res
+com.crazecoder.openfile.open_file-media-1.0.0-1 C:\Users\agat\.gradle\caches\transforms-3\5e4b3a1b5f420fa7b1eaf42915234a81\transformed\media-1.0.0\res
+com.crazecoder.openfile.open_file-coordinatorlayout-1.0.0-2 C:\Users\agat\.gradle\caches\transforms-3\6bdc7d3aedf0e6ac7636ecae24638b1e\transformed\coordinatorlayout-1.0.0\res
+com.crazecoder.openfile.open_file-jetified-window-1.0.0-beta04-3 C:\Users\agat\.gradle\caches\transforms-3\aa63b1d9f3d50daa819346953e1a95a0\transformed\jetified-window-1.0.0-beta04\res
+com.crazecoder.openfile.open_file-jetified-window-java-1.0.0-beta04-4 C:\Users\agat\.gradle\caches\transforms-3\f3e237183d5fb0dc1438664d84aebc84\transformed\jetified-window-java-1.0.0-beta04\res
+com.crazecoder.openfile.open_file-core-1.6.0-5 C:\Users\agat\.gradle\caches\transforms-3\fa4fb2a8372e72f5c5be2d4ab2f5aab0\transformed\core-1.6.0\res
+com.crazecoder.openfile.open_file-main-6 C:\Users\agat\AppData\Local\Pub\Cache\hosted\pub.dev\open_file-3.2.1\android\src\main\res
+com.crazecoder.openfile.open_file-release-7 C:\Users\agat\AppData\Local\Pub\Cache\hosted\pub.dev\open_file-3.2.1\android\src\release\res
+com.crazecoder.openfile.open_file-pngs-8 C:\Users\agat\Documents\kek_apps\build\open_file\generated\res\pngs\release
+com.crazecoder.openfile.open_file-resValues-9 C:\Users\agat\Documents\kek_apps\build\open_file\generated\res\resValues\release
+com.crazecoder.openfile.open_file-rs-10 C:\Users\agat\Documents\kek_apps\build\open_file\generated\res\rs\release
+com.crazecoder.openfile.open_file-mergeReleaseResources-11 C:\Users\agat\Documents\kek_apps\build\open_file\intermediates\incremental\release\mergeReleaseResources\merged.dir
+com.crazecoder.openfile.open_file-mergeReleaseResources-12 C:\Users\agat\Documents\kek_apps\build\open_file\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+com.crazecoder.openfile.open_file-merged_res-13 C:\Users\agat\Documents\kek_apps\build\open_file\intermediates\merged_res\release

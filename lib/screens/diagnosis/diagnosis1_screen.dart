@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:kek_app/components/button_primary.dart';
 import 'package:kek_app/components/header.dart';
 import 'package:kek_app/components/input_special.dart';
+import 'package:kek_app/models/diagnosis_provider.dart';
 // import 'package:kek_app/components/special_appbar.dart';
 import 'package:kek_app/models/patient.dart';
 import 'package:kek_app/screens/diagnosis/diagnosis2_screen.dart';
 import 'package:kek_app/screens/implementation/additional_food_screen.dart';
 import 'package:kek_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class Diagnosis1Screen extends StatefulWidget {
   // final RiwayatPatient? riwayatPatient;
@@ -21,13 +23,20 @@ class Diagnosis1Screen extends StatefulWidget {
 
 class _Diagnosis1ScreenState extends State<Diagnosis1Screen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController _txtWeight = TextEditingController();
+  final TextEditingController _txtHeight = TextEditingController();
   final TextEditingController _txtLILA = TextEditingController();
 
   void checkKek() {
+    var diagnosisProvider =
+        Provider.of<DiagnosisProvider>(context, listen: false);
+
     double lila = double.parse(_txtLILA.text);
+    double height = double.parse(_txtHeight.text);
+    diagnosisProvider.updateTingginBadan(height);
+    diagnosisProvider.updateUkuranLila(lila);
+
     // ANDA KENA KEK
-    if (widget.patient!.tinggiBadan! < 145 && lila < 23.5) {
+    if (height < 145 && lila < 23.5) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AdditioanFoodScreen(
               status: 'kek',
@@ -37,6 +46,16 @@ class _Diagnosis1ScreenState extends State<Diagnosis1Screen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('anda kena kek')));
     }
+    // if (lila < 23.5) {
+    //   Navigator.of(context).push(MaterialPageRoute(
+    //       builder: (context) => AdditioanFoodScreen(
+    //           status: 'kek',
+    //           patient: widget.patient!,
+    //           resultDiagnosis:
+    //               'Lingkar Lengan < 23.5 dan tinggi badan < 145')));
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(const SnackBar(content: Text('anda kena kek')));
+    // }
     // ADA KEMUNGKINAN KENA KEK
     else {
       // Navigator.pushNamed(context, '/diagnosis2');
@@ -72,7 +91,7 @@ class _Diagnosis1ScreenState extends State<Diagnosis1Screen> {
               padding: EdgeInsets.symmetric(horizontal: defaultMargin),
               child: Column(children: [
                 TextFormField(
-                    controller: _txtWeight,
+                    controller: _txtHeight,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
@@ -82,11 +101,11 @@ class _Diagnosis1ScreenState extends State<Diagnosis1Screen> {
                     maxLength: 5,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Mohon Isi Berat Badan Saat Ini';
+                        return 'Mohon Isi Tinggi Badan Saat Ini';
                       }
                       return null;
                     },
-                    decoration: SpecialInput('Berat Badan Saat ini')),
+                    decoration: SpecialInput('Tinggi Badan Saat Ini')),
                 TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
